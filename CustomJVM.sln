@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36127.28 d17.14
+VisualStudioVersion = 17.14.36127.28
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomJVM", "CustomJVM\CustomJVM.csproj", "{27852BCA-EE51-4E97-8BE7-BD4B7EEB08C6}"
 EndProject
@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		JVMStuff\JavaFile.class = JVMStuff\JavaFile.class
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLib", "ClassLib\ClassLib.csproj", "{F615E44D-7BCC-4F82-828C-698C671F777A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +22,10 @@ Global
 		{27852BCA-EE51-4E97-8BE7-BD4B7EEB08C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27852BCA-EE51-4E97-8BE7-BD4B7EEB08C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27852BCA-EE51-4E97-8BE7-BD4B7EEB08C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F615E44D-7BCC-4F82-828C-698C671F777A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F615E44D-7BCC-4F82-828C-698C671F777A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F615E44D-7BCC-4F82-828C-698C671F777A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F615E44D-7BCC-4F82-828C-698C671F777A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
