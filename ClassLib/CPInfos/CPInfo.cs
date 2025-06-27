@@ -19,9 +19,7 @@ namespace ClassLib.CPInfos
         Double = 6,
         NameAndType = 12,
         Utf8 = 1,
-        MethodHandle = 15,
-        MethodType = 16,
-        InvokeDynamic = 18
+        MethodType = 16
     }
     public abstract class CPInfo
     {

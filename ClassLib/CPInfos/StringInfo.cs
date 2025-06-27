@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace ClassLib.CPInfos
 {
-    public class String : CPInfo
+    public class StringInfo : CPInfo
     {
         public ushort stringIndex;
-        public String()
+        public StringInfo(ushort stringIndex)
         {
             tag = Tag.String;
+            this.stringIndex = stringIndex;
         }
     }
 }

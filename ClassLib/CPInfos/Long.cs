@@ -8,11 +8,11 @@ namespace ClassLib.CPInfos
 {
     public class Long : CPInfo
     {
-        public int highHalf;
-        public int lowHalf;
-        public Long()
+        public ulong data;
+        public Long(ulong data)
         {
             tag = Tag.Long;
+            this.data = data;
         }
     }
 }

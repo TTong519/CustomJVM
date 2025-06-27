@@ -10,9 +10,11 @@ namespace ClassLib.CPInfos
     {
         public ushort classIndex;
         public ushort nameAndTypeIndex;
-        public MethodRef()
+        public MethodRef(ushort classIndex, ushort nameTypeIndex)
         {
             tag = Tag.Methodref;
+            this.classIndex = classIndex;
+            nameAndTypeIndex = nameTypeIndex;
         }
     }
 }

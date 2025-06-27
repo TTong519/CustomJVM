@@ -8,10 +8,11 @@ namespace ClassLib.CPInfos
 {
     public class Integer : CPInfo
     {
-        public int value;
-        public Integer()
+        public uint value;
+        public Integer(uint value)
         {
             tag = Tag.Integer;
+            this.value = value;
         }
     }
 }

@@ -9,9 +9,10 @@ namespace ClassLib.CPInfos
     public class Class : CPInfo
     {
         public ushort nameIndex;
-        public Class()
+        public Class(ushort nameIndex)
         {
             tag = Tag.Class;
+            this.nameIndex = nameIndex;
         }
     }
 }

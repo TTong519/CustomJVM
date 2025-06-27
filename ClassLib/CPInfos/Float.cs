@@ -9,9 +9,10 @@ namespace ClassLib.CPInfos
     public class Float : CPInfo
     {
         public float value;
-        public Float()
+        public Float(float value)
         {
             tag = Tag.Float;
+            this.value = value;
         }
     }
 }

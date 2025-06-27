@@ -12,5 +12,6 @@ namespace ClassLib.CPInfos
         public ushort minorVersion;
         public ushort majorVersion;
         public ushort constantPoolCount;
+        public List<CPInfo> constantPool = new List<CPInfo>();
     }
 }

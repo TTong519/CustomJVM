@@ -10,9 +10,11 @@ namespace ClassLib.CPInfos
     {
         ushort classIndex;
         ushort nameAndTypeIndex;
-        public FieldRef()
+        public FieldRef(ushort classIndex, ushort nameTypeIndex)
         {
             tag = Tag.Fieldref;
+            this.classIndex = classIndex;
+            nameAndTypeIndex = nameTypeIndex;
         }
     }
 }

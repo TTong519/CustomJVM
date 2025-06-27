@@ -8,11 +8,11 @@ namespace ClassLib.CPInfos
 {
     public class Double : CPInfo
     {
-        public int highHalf;
-        public int lowHalf;
-        public Double()
+        public double value;
+        public Double(double value)
         {
             tag = Tag.Double;
+            this.value = value;
         }
     }
 }

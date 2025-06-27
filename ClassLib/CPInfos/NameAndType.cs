@@ -10,9 +10,11 @@ namespace ClassLib.CPInfos
     {
         public ushort nameIndex;
         public ushort descriptorIndex;
-        public NameAndType()
+        public NameAndType(ushort nameIndex, ushort descriptorIndex)
         {
             tag = Tag.NameAndType;
+            this.nameIndex = nameIndex;
+            this.descriptorIndex = descriptorIndex;
         }
     }
 }
