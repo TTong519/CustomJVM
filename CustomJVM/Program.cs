@@ -1,19 +1,75 @@
-﻿using static ClassLib.SpanExtensions;
-using ClassLib;
+﻿using ClassLib;
+using ClassLib.Attributes;
 using ClassLib.CPInfos;
 using System.Buffers.Binary;
+using System.Reflection;
+using System.Reflection.PortableExecutable;
+using System.Text;
+using static ClassLib.SpanExtensions;
+using MethodInfo = ClassLib.MethodInfo;
 namespace CustomJVM
 {
-    
+
     internal class Program
     {
-        
+        public static string ParseingHelper(ushort index, ClassFile cf)
+        {
+            if (cf.constantPool[index] is not UTF8 utf8info) throw new Exception("oof");
+            string result = Encoding.UTF8.GetString(utf8info.bytes);
+            return result;
+        }
+        public static List<AttributeInfo> ParseAttributes(ref ReadOnlySpan<byte> byteCodeSpan, ClassFile classFile)
+        {
+            ushort attributesCount = byteCodeSpan.SliceUShort();
+            List<AttributeInfo> attributes = new List<AttributeInfo>();
+            for (int k = 0; k < attributesCount; k++)
+            {
+                ushort attributeNameIndex = (ushort)(byteCodeSpan.SliceUShort() - 1);
+                uint attributeLength = byteCodeSpan.SliceUInt();
+
+                switch (ParseingHelper(attributeNameIndex, classFile))
+                {
+                    case "Code":
+                        ushort maxStack = byteCodeSpan.SliceUShort();
+                        ushort maxLocals = byteCodeSpan.SliceUShort();
+                        uint codeLength = byteCodeSpan.SliceUInt();
+                        byte[] code = byteCodeSpan.Slice(0, (int)codeLength).ToArray();
+                        byteCodeSpan = byteCodeSpan.Slice((int)codeLength);
+                        byteCodeSpan.SliceUShort(); // slice out the exception table length
+                        var codeAttributes = ParseAttributes(ref byteCodeSpan, classFile);
+                        attributes.Add(new CodeAttribute(maxStack, maxLocals, codeLength, code.ToList(), (ushort)codeAttributes.Count, codeAttributes, attributeLength));
+                        break;
+                    case "SourceFile":
+                        ushort sourceFileIndex = byteCodeSpan.SliceUShort();
+                        attributes.Add(new SourceFileAttribute(attributeNameIndex, attributeLength, sourceFileIndex));
+                        break;
+                    case "LineNumberTable":
+                        ushort lineNumberTableLength = byteCodeSpan.SliceUShort();
+                        List<LineNumberInfo> lineNumberTable = new List<LineNumberInfo>();
+                        for (int i = 0; i < lineNumberTableLength; i++)
+                        {
+                            ushort startPc = byteCodeSpan.SliceUShort();
+                            ushort lineNumber = byteCodeSpan.SliceUShort();
+                            lineNumberTable.Add(new LineNumberInfo(startPc, lineNumber));
+                        }
+                        attributes.Add(new LineNumberAttribute(attributeNameIndex, attributeLength, lineNumberTable));
+                        break;
+                    default:
+                        throw new NotSupportedException($"Unsupported attribute: {ParseingHelper(attributeNameIndex, classFile)}");
+                }
+            }
+            return attributes;
+        }
         static void Main(string[] args)
         {
             byte[] byteCode = File.ReadAllBytes("../../../../JVMStuff/JavaFile.class");
             ReadOnlySpan<byte> byteCodeSpan = byteCode.AsSpan();
             ClassFile classFile = new ClassFile();
             classFile.magic = byteCodeSpan.SliceUInt();
+            if (classFile.magic != 0xCAFEBABE)
+            {
+                throw new Exception("Invalid class file magic number.");
+            }
             classFile.minorVersion = byteCodeSpan.SliceUShort();
             classFile.majorVersion = byteCodeSpan.SliceUShort();
             classFile.constantPoolCount = byteCodeSpan.SliceUShort();
@@ -63,7 +119,35 @@ namespace CustomJVM
                     default:
                         throw new NotSupportedException($"Unsupported constant pool tag: {tag}");
                 }
+                ;
             }
+            classFile.accessFlags = (AccessFlags)byteCodeSpan.SliceUShort();
+            byteCodeSpan.SliceUShort();
+            byteCodeSpan.SliceUShort();
+            ushort interfacesCount = byteCodeSpan.SliceUShort();
+            for (int j = 0; j < interfacesCount; j++)
+            {
+                byteCodeSpan.SliceUShort();
+            }
+            ushort fieldsCount = byteCodeSpan.SliceUShort();
+            for (int j = 0; j < fieldsCount; j++)
+            {
+                byteCodeSpan.SliceUShort();
+            }
+            classFile.methodsCount = byteCodeSpan.SliceUShort();
+            for (int j = 0; j < classFile.methodsCount; j++)
+            {
+                MethodInfo methodInfo = new MethodInfo();
+                methodInfo.accessFlags = (MethodAccessFlags)byteCodeSpan.SliceUShort();
+                methodInfo.nameIndex = byteCodeSpan.SliceUShort();
+                methodInfo.descriptorIndex = byteCodeSpan.SliceUShort();
+                methodInfo.attributes = ParseAttributes(ref byteCodeSpan, classFile);
+                classFile.methods.Add(methodInfo);
+            }
+            classFile.attributes = ParseAttributes(ref byteCodeSpan, classFile);
+
+        ;
         }
+
     }
 }

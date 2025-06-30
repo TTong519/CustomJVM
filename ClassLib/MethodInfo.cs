@@ -1,5 +1,4 @@
 ﻿using ClassLib.Attributes;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace ClassLib
 {
-    enum AccessFlags : ushort
+    [Flags]
+    public enum MethodAccessFlags
     {
         Public = 0x0001,
         Private = 0x0002,
@@ -20,11 +20,11 @@ namespace ClassLib
         Native = 0x0100,
         Abstract = 0x0400,
         Strict = 0x0800,
-        Synthetic = 0x1000,
+        Synthetic = 0x1000
     }
-    internal class MethodInfo
+    public class MethodInfo
     {
-        public List<AccessFlags> accessFlags;
+        public MethodAccessFlags accessFlags;
         public ushort nameIndex { get; set; }
         public ushort descriptorIndex { get; set; }
         public ushort attributesCount { get; set; }
@@ -32,15 +32,10 @@ namespace ClassLib
         public MethodInfo()
         {
             attributes = new List<AttributeInfo>();
-            accessFlags = new List<AccessFlags>();
         }
-        public MethodInfo(AccessFlags[] accessFlags, ushort nameIndex, ushort descriptorIndex, ushort attributesCount, List<AttributeInfo> attributes)
+        public MethodInfo(ushort accessFlags, ushort nameIndex, ushort descriptorIndex, ushort attributesCount, List<AttributeInfo> attributes)
         {
-            this.accessFlags = new List<AccessFlags>();
-            foreach (var flag in accessFlags)
-            {
-                this.accessFlags.Add(flag);
-            }
+            this.accessFlags = (MethodAccessFlags)accessFlags;
             this.nameIndex = nameIndex;
             this.descriptorIndex = descriptorIndex;
             this.attributesCount = attributesCount;
