@@ -62,6 +62,7 @@ namespace CustomJVM
         }
         static void Main(string[] args)
         {
+            int mainIndex = 0;
             byte[] byteCode = File.ReadAllBytes("../../../../JVMStuff/JavaFile.class");
             ReadOnlySpan<byte> byteCodeSpan = byteCode.AsSpan();
             ClassFile classFile = new ClassFile();
@@ -143,11 +144,16 @@ namespace CustomJVM
                 methodInfo.descriptorIndex = byteCodeSpan.SliceUShort();
                 methodInfo.attributes = ParseAttributes(ref byteCodeSpan, classFile);
                 classFile.methods.Add(methodInfo);
+                mainIndex = classFile.methods.LastIndexOf(methodInfo);
             }
             classFile.attributes = ParseAttributes(ref byteCodeSpan, classFile);
-
-        ;
+            foreach(var thing in classFile.methods[mainIndex].attributes)
+            {
+                if (thing is CodeAttribute codeAttribute)
+                {
+                    codeAttribute.runCode();
+                }
+            }
         }
-
     }
 }
